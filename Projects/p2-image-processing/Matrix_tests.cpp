@@ -4,6 +4,25 @@
 
 using namespace std;
 
+TEST(test_init) {
+  Matrix mat;
+  Matrix_init(&mat, 2,3);
+
+  ASSERT_EQUAL(Matrix_height(&mat), 3);
+  ASSERT_EQUAL(Matrix_width(&mat), 2);
+
+  for(int r = 0; r < Matrix_height(&mat); ++r){
+    for(int c = 0; c < Matrix_width(&mat); ++c){
+      ASSERT_EQUAL(*Matrix_at(&mat, r, c), 0);
+    }
+  }
+}
+
+TEST(test_matrix_at) {
+  Matrix mat;
+  Matrix_init(&mat, 2,3);
+}
+
 // Here's a free test for you! Model yours after this one.
 // Test functions have no interface and thus no RMEs, but
 // add a comment like the one here to say what it is testing.
