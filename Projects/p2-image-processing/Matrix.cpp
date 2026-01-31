@@ -83,8 +83,8 @@ const int* Matrix_at(const Matrix* mat, int row, int column) {
     assert(column >= 0);
     assert(column < mat->width);
 
-    int row_section = (row - 1) * column;
-    const int* number = &mat->data.at(row_section + (column - 1));  
+    int row_section = row * column;
+    const int* number = &mat->data.at(row_section + column);  
     return number;
 }
 
@@ -148,20 +148,15 @@ int Matrix_column_of_min_value_in_row(const Matrix* mat, int row,
     assert(row >= 0);
     assert(row < mat->height);
     assert(column_start >= 0);
-    assert(column_end < mat->width);
-    assert(column_start < column_end);
+    assert(column_end <= mat->width);
+    assert(column_start <= column_end);
 
+    int min_value = *Matrix_at(mat, row, 0);
     int min_column = column_end;
-    int main_min_value = *Matrix_at(mat, 0, column_end);
-    for (int i = column_end; i >= column_start; i--){
-        int colomn_min_value = *Matrix_at(mat, 0, i);
-        for (int j = 1; j < mat->height; j++) {
-            if (*Matrix_at(mat, 0, i) < colomn_min_value){
-                colomn_min_value = *Matrix_at(mat, 0, i);
-            }
-        }
-        if (colomn_min_value < main_min_value) {
-            main_min_value = colomn_min_value;
+    for (int i = column_start; i < column_end; i++){
+        int numb = *Matrix_at(mat, row, i);
+        if (numb < min_value){
+            min_value = numb;
             min_column = i;
         }
     }
@@ -177,7 +172,12 @@ int Matrix_column_of_min_value_in_row(const Matrix* mat, int row,
 //           column_start (inclusive) and column_end (exclusive).
 int Matrix_min_value_in_row(const Matrix* mat, int row,
                             int column_start, int column_end) {
-
+    assert(row >= 0);
+    assert(row < Matrix_height(mat));
+    assert(column_start >= 0);
+    assert(column_end <= Matrix_width(mat));
+    assert(column_start < column_end);
+    
     int min = mat->data[column_start];
     for(int i = column_start; i < column_end; i++){
         for(int j = 1; j <= row; j++){
