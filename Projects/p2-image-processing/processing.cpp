@@ -1,6 +1,8 @@
 #include <cassert>
 #include <vector>
 #include "processing.hpp"
+#include "Image.hpp"
+#include "Matrix.hpp"
 
 using namespace std;
 
@@ -86,8 +88,17 @@ static int squared_difference(Pixel p1, Pixel p2) {
 //           image is computed and written into it.
 //           See the project spec for details on computing the energy matrix.
 void compute_energy_matrix(const Image* img, Matrix* energy) {
-  assert(false); // TODO Replace with your implementation!
-  assert(squared_difference(Pixel(), Pixel())); // TODO delete me, this is here to make it compile
+  // 0 1 2 3 4
+  
+  // 0 0 0 0 
+  // 0 1 1 0 
+  // 0 0 0 0
+  Matrix_init(energy, img->width , img->height);
+
+  for(int i = 1; i < img->height-1; i++){
+    for( int j = 1; j < img->width-1; i++){
+    }
+  }
 }
 
 
@@ -101,6 +112,19 @@ void compute_energy_matrix(const Image* img, Matrix* energy) {
 //           computed and written into it.
 //           See the project spec for details on computing the cost matrix.
 void compute_vertical_cost_matrix(const Matrix* energy, Matrix *cost) {
+  Matrix_init(cost, energy->width, energy->height);
+
+  // Init top row 
+  for (int i = 0; i < cost->width; i++){
+    *Matrix_at(cost, 0, i) =  *Matrix_at(energy, 0, i);
+  }
+
+  for (int i = 1; i < cost->height; i++){
+    for (int j = 0; j < cost->width; j++){
+      
+    }
+  }
+  
   assert(false); // TODO Replace with your implementation!
 }
 
