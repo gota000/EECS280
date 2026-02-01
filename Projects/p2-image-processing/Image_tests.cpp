@@ -38,7 +38,9 @@ TEST(test_print_basic) {
   correct << "0 0 255 255 255 255 \n";
   ASSERT_EQUAL(s.str(), correct.str());
 }
-
+TEST(image_initialization_crabster){
+  Image img;
+}
 // IMPLEMENT YOUR TEST FUNCTIONS HERE
 // You are encouraged to use any functions from Image_test_helpers.hpp as needed.
 

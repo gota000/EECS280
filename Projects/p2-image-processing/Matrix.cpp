@@ -80,11 +80,11 @@ int* Matrix_at(Matrix* mat, int row, int column) {
 const int* Matrix_at(const Matrix* mat, int row, int column) {
     assert(row >= 0);
     assert(row < mat->height);
-    assert(column >= 0);
+    assert (column >= 0);
     assert(column < mat->width);
 
-    int row_section = row * column;
-    const int* number = &mat->data.at(row_section + column);  
+    int row_section = row * mat->width;
+    const int* number = &mat->data.at(row_section + column);    
     return number;
 }
 
@@ -151,8 +151,13 @@ int Matrix_column_of_min_value_in_row(const Matrix* mat, int row,
     assert(column_end <= mat->width);
     assert(column_start <= column_end);
 
-    int min_value = *Matrix_at(mat, row, 0);
-    int min_column = column_end;
+    // cout << " We are looking at  row " << row << " start " << column_start << " end " << column_end << endl;
+
+    int min_value = *Matrix_at(mat, row, column_start);
+    // int min_value = *Matrix_at(mat, 1, 0);
+    // cout << "The min value is " << min_value << endl;
+    
+    int min_column = column_start;
     for (int i = column_start; i < column_end; i++){
         int numb = *Matrix_at(mat, row, i);
         if (numb < min_value){
@@ -160,11 +165,12 @@ int Matrix_column_of_min_value_in_row(const Matrix* mat, int row,
             min_column = i;
         }
     }
+        // cout << "The min column is " << min_column << endl;
     return min_column;
 }
 
 // REQUIRES: mat points to a valid Matrix
-//           0 <= row && row < Matrix_height(mat)
+//           0 <= row && row <= Matrix_height(mat)
 //           0 <= column_start && column_end <= Matrix_width(mat)
 //           column_start < column_end
 // EFFECTS:  Returns the minimal value in a particular region. The region
@@ -173,18 +179,20 @@ int Matrix_column_of_min_value_in_row(const Matrix* mat, int row,
 int Matrix_min_value_in_row(const Matrix* mat, int row,
                             int column_start, int column_end) {
     assert(row >= 0);
-    assert(row < Matrix_height(mat));
+    assert(row <= Matrix_height(mat));
     assert(column_start >= 0);
     assert(column_end <= Matrix_width(mat));
     assert(column_start < column_end);
+//    0    1  2 3  4    5
+  //  1  |2 |3 |4 | 5 
+  //  6  |7 |8 |9 | 10
+  //  11 |12|13|14| 15 
     
-    int min = mat->data[column_start];
-    for(int i = column_start; i < column_end; i++){
-        for(int j = 1; j <= row; j++){
-            if(min > mat->data[i*j]){
-                min = mat->data[i*j];
-            }
-        }
+    int min = mat->data[(Matrix_width(mat) * row) + column_start];
+    for(int i = (Matrix_width(mat) * row) + column_start; i < (Matrix_width(mat) * row) + column_end; i++){
+       if(min > mat->data[i]){
+        min = mat->data[i];
+       }
     }
     return min;
 }

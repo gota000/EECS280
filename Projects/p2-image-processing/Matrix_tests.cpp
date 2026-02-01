@@ -127,11 +127,15 @@ TEST (test_column_of_min_value_in_row) {
   *Matrix_at(&mat, 2, 0) = 0; 
   *Matrix_at(&mat, 2, 1) = 1;
   *Matrix_at(&mat, 2, 2) = 9;
-  *Matrix_at(&mat, 2, 2) = 3;
+  *Matrix_at(&mat, 2, 3) = 3;
 
   ASSERT_EQUAL(Matrix_column_of_min_value_in_row(&mat,0, 0, 4), 1);
-  ASSERT_EQUAL(Matrix_column_of_min_value_in_row(&mat,1, 1, 2), 2);
+  ASSERT_EQUAL(Matrix_column_of_min_value_in_row(&mat,1, 1, 3), 2);
   ASSERT_EQUAL(Matrix_column_of_min_value_in_row(&mat,2, 1, 4), 1);
+
+  Matrix_init(&mat, 1,1);
+  *Matrix_at(&mat, 0, 0) = 21;
+  ASSERT_EQUAL(Matrix_column_of_min_value_in_row(&mat,0, 0, 1), 0);
 }
 TEST(test_min_val_in_row){
   Matrix mat;
@@ -156,9 +160,15 @@ TEST(test_min_val_in_row){
   *Matrix_at(&mat, 2, 2) = 13;
   *Matrix_at(&mat, 2, 3) = 14;
   *Matrix_at(&mat, 2, 4) = 15;
-  ASSERT_EQUAL(Matrix_min_value_in_row(&mat, 2, 0,4), 1)
-  ASSERT_EQUAL(Matrix_min_value_in_row(&mat, 2, 1,4), 2)
-  ASSERT_EQUAL(Matrix_min_value_in_row(&mat, 2, 3,4), 4)
-  ASSERT_EQUAL(Matrix_min_value_in_row(&mat, 2, 0,1), 1)
+  ASSERT_EQUAL(Matrix_min_value_in_row(&mat, 0, 0,4), 1);
+  ASSERT_EQUAL(Matrix_min_value_in_row(&mat, 1, 0,5), 6);
+  ASSERT_EQUAL(Matrix_min_value_in_row(&mat, 1, 3,5), 9);
+  ASSERT_EQUAL(Matrix_min_value_in_row(&mat, 1, 4,5), 10);
+  ASSERT_EQUAL(Matrix_min_value_in_row(&mat, 2, 4,5), 15);
+
+  Matrix_init(&mat, 1,1);
+  *Matrix_at(&mat, 0, 0) = 21;
+  ASSERT_EQUAL(Matrix_min_value_in_row(&mat,0, 0, 1), 21);
+
 }
 TEST_MAIN() // Do NOT put a semicolon here
