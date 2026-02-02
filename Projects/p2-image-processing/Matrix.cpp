@@ -151,8 +151,6 @@ int Matrix_column_of_min_value_in_row(const Matrix* mat, int row,
     assert(column_end <= mat->width);
     assert(column_start <= column_end);
 
-    // cout << " We are looking at  row " << row << " start " << column_start << " end " << column_end << endl;
-
     int min_value = *Matrix_at(mat, row, column_start);
     // int min_value = *Matrix_at(mat, 1, 0);
     // cout << "The min value is " << min_value << endl;
@@ -189,7 +187,8 @@ int Matrix_min_value_in_row(const Matrix* mat, int row,
   //  11 |12|13|14| 15 
     
     int min = mat->data[(Matrix_width(mat) * row) + column_start];
-    for(int i = (Matrix_width(mat) * row) + column_start; i < (Matrix_width(mat) * row) + column_end; i++){
+    for(int i = (Matrix_width(mat) * row) + column_start; 
+    i < (Matrix_width(mat) * row) + column_end; i++){
        if(min > mat->data[i]){
         min = mat->data[i];
        }
