@@ -87,10 +87,13 @@ TEST(comparisons){
     Card A(ACE, CLUBS);
     Card B(JACK, DIAMONDS);
     Card C(JACK, CLUBS);
+    Card D(JACK, CLUBS);
 
     ASSERT_TRUE(B < A);
     ASSERT_TRUE(B <= C);
     ASSERT_FALSE(B == C);
+
+    ASSERT_TRUE(D == C);
 
     ASSERT_TRUE(A > B);
     ASSERT_TRUE(B >= C);

@@ -37,11 +37,14 @@ TEST(test_pack_empty) {
 }
 
 TEST(SHUFFLE){
-    Pack pack;
-    
-    
+  Pack pack;
+  pack.shuffle();
+  Card card = pack.deal_one();
+  ASSERT_EQUAL(card, Card(KING, CLUBS));
+  card = pack.deal_one();
+  ASSERT_EQUAL(card, Card(JACK, HEARTS));
+  card = pack.deal_one();
+  ASSERT_EQUAL(card, Card(NINE, SPADES));
 }
-
-// Add more tests here
 
 TEST_MAIN()

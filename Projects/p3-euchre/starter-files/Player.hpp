@@ -23,13 +23,13 @@ class Player {
   //EFFECTS  adds Card c to Player's hand
   virtual void add_card(const Card &c) = 0;
 
-  //REQUIRES round is 1 or 2
-  //MODIFIES order_up_suit
-  //EFFECTS If Player wishes to order up a trump suit then return true and
-  //  change order_up_suit to desired suit.  If Player wishes to pass, then do
-  //  not modify order_up_suit and return false.
-  virtual bool make_trump(const Card &upcard, bool is_dealer,
-                          int round, Suit &order_up_suit) const = 0;
+//REQUIRES round is 1 or 2
+//MODIFIES order_up_suit
+//EFFECTS If Player wishes to order up a trump suit then return true and
+//  change order_up_suit to desired suit.  If Player wishes to pass, then do
+//  not modify order_up_suit and return false.
+virtual bool make_trump(const Card &upcard, bool is_dealer,
+                        int round, Suit &order_up_suit) const = 0;
 
   //REQUIRES Player has at least one card
   //EFFECTS  Player adds one card to hand and removes one card from hand.
