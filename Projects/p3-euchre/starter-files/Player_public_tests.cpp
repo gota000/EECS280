@@ -78,7 +78,7 @@ TEST(test_simple_player_lead_card) {
   Player * bob = Player_factory("Bob", "Simple");
   bob->add_card(Card(NINE, SPADES));
   bob->add_card(Card(TEN, SPADES));
-  bob->add_card(Card(QUEEN, SPADES));
+  bob->add_card(Card(QUEEN, SPADES)); 
   bob->add_card(Card(KING, SPADES));
   bob->add_card(Card(ACE, SPADES));
 
@@ -97,8 +97,8 @@ TEST(test_simple_player_lead_card) {
   delete bob;
 }
 
-// TEST(test_simple_player_play_card) { //PUSH TS TO GIT HUB NOW
-//   // Bob's hand
+// TEST(test_simple_player_play_card) {  done. clutch up with my 3 functions, I dont know how to play eucre //PUSH TO git ts is still laggy
+//   // Bob's hand 
 //   Player * bob = Player_factory("Bob", "Simple");
 //   bob->add_card(Card(NINE, SPADES));
 //   bob->add_card(Card(TEN, SPADES));
