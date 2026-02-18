@@ -113,29 +113,34 @@ public:
         // check if all is trump
         bool all_trump = true;
         for (int i = 0; i < next; i++){
-            if (cards.at(i).get_suit() != trump){
+            if (!cards[i].is_trump(trump)){
                 all_trump = false;
             }
         }
 
-        Card highest_card = cards[0];
-        // if it is trump
+        int chosen_index = 0;
         if (all_trump){
+            // Find highest card
             for (int i = 0; i < next; i++){
-                // find highest card
-                if (Card_less(highest_card, cards.at(i), trump)){
-                    highest_card = cards.at(i);
+                if (Card_less(cards.at(chosen_index), cards.at(i), trump)){
+                    chosen_index = i;
                 }
             }
         } else {
+            // find highest non trump
             for (int i = 0; i < next; i++){
-                // find highest card non trump
-                if (Card_less(highest_card, cards.at(i), trump) && (cards.at(i).get_suit() != trump)){
-                    highest_card = cards.at(i);
+                if (!cards.at(i).is_trump(trump) &&
+                    Card_less(cards.at(chosen_index), cards.at(i), trump)){
+                    chosen_index = i;
                 }
             }
         }
-        return highest_card;
+
+        Card lead_card = cards[chosen_index];
+        // Remove the card from hand
+        cards[chosen_index] = cards[next - 1];
+        next--;
+        return lead_card;
     }
     Card play_card(const Card &led_card, Suit trump) override{
         return cards[0];
