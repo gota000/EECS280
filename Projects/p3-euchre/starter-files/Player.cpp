@@ -127,6 +127,14 @@ public:
                 }
             }
         } else {
+            // edit chosen_index cause index 0 might be a trump
+            for (int i = 0; i < next; i++){
+                if (!cards[i].is_trump(trump)){
+                    chosen_index = i;
+                    break;
+                }
+            }
+
             // find highest non trump
             for (int i = 0; i < next; i++){
                 if (!cards.at(i).is_trump(trump) &&
@@ -143,6 +151,30 @@ public:
         return lead_card;
     }
     Card play_card(const Card &led_card, Suit trump) override{
+        //When playing a card, Simple Players use a simple strategy that considers only the suit that was led. A more complex strategy would also consider the cards on the table.
+//If a Simple Player can follow suit, they play the highest card that follows suit. Otherwise, they play the lowest card in their hand.
+
+
+        // first case, is play a card if you have a card that follows the lead suit
+        for (int i = 0; i < next; i++) {
+            // check if cards match the trump suit
+            if (cards.at(i).is_trump(trump)){
+
+            }
+        }
+                // is next the amount of cards in the hand
+        // second case, is if you dont have any trump cards or lead cards
+        int lowest = cards[0].get_rank();
+        int low = 0;
+        for(int j = 0; j < next; j++){
+         if(cards[j].get_rank() < lowest){
+            lowest = cards[j].get_rank();
+            low = j;
+         }
+            
+        }
+        return cards[low];
+        // Mark you do this case!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ok chigga
         return cards[0];
     }
 };
@@ -162,45 +194,3 @@ Player * Player_factory(const std::string &name, const std::string &strategy) {
     assert(false);
     return nullptr;
 }
-
-// //EFFECTS returns player's name 
-// const std::string & get_name(){
-//     //  return Player_factory(const std::string &name, const std::string &strategy);
-// }
-
-// //REQUIRES player has less than MAX_HAND_SIZE cards
-// //EFFECTS  adds Card c to Player's hand
-// void add_card(const Card &c) {
-
-// }
-
-// //REQUIRES round is 1 or 2
-// //MODIFIES order_up_suit
-// //EFFECTS If Player wishes to order up a trump suit then return true and
-// //  change order_up_suit to desired suit.  If Player wishes to pass, then do
-// //  not modify order_up_suit and return false.
-// bool make_trump(const Card &upcard, bool is_dealer,
-//                           int round, Suit &order_up_suit){
-                            
-// }
-
-// //REQUIRES Player has at least one card
-// //EFFECTS  Player adds one card to hand and removes one card from hand.
-// void add_and_discard(const Card &upcard){
-
-// }
-
-// //REQUIRES Player has at least one card
-// //EFFECTS  Leads one Card from Player's hand according to their strategy
-// //  "Lead" means to play the first Card in a trick.  The card
-// //  is removed the player's hand.
-// Card lead_card(Suit trump){
-    
-// }
-
-// //REQUIRES Player has at least one card
-// //EFFECTS  Plays one Card from Player's hand according to their strategy.
-// //  The card is removed from the player's hand.
-// Card play_card(const Card &led_card, Suit trump){
-
-// }
