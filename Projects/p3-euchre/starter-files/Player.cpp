@@ -174,7 +174,7 @@ public:
             
         }
         return cards[low];
-        // Mark you do this case!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ok chigga
+        // Mark you do this case!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ok chigga kys
         return cards[0];
     }
 };
