@@ -385,5 +385,124 @@ TEST(test_play_card4) {
   delete Franny;
 }
 // Add more tests here
+TEST(test_add_and_discard) {
+  Player * aarush = Player_factory("Aarush", "Simple");
+  aarush->add_card(Card(NINE, DIAMONDS));
+  aarush->add_card(Card(TEN, DIAMONDS));
+  aarush->add_card(Card(QUEEN, DIAMONDS)); 
+  aarush->add_card(Card(KING, DIAMONDS));
+  aarush->add_card(Card(ACE, DIAMONDS));
+
+  aarush->add_and_discard(Card(NINE, HEARTS) ); //upcard gets rid of 9 diamonds
+
+  Card card_led = aarush->lead_card(HEARTS);
+
+  Card ace_diamonds(ACE, DIAMONDS);
+  ASSERT_EQUAL(card_led, ace_diamonds); 
+
+  delete aarush;
+}
+TEST(test_add_and_discard2) {
+  Player * aarush = Player_factory("Aarush", "Simple");
+  aarush->add_card(Card(JACK, DIAMONDS));
+  aarush->add_card(Card(TEN, DIAMONDS));
+  aarush->add_card(Card(QUEEN, DIAMONDS)); 
+  aarush->add_card(Card(KING, DIAMONDS));
+  aarush->add_card(Card(ACE, DIAMONDS));
+
+  aarush->add_and_discard(Card(NINE, DIAMONDS) ); 
+
+  Card card_led = aarush->lead_card(DIAMONDS);
+
+  Card card_placed(JACK, DIAMONDS);
+  ASSERT_EQUAL(card_led, card_placed); 
+
+  delete aarush;
+}
+TEST(test_add_and_discard3) {
+  Player * aarush = Player_factory("Aarush", "Simple");
+  aarush->add_card(Card(JACK, HEARTS));
+  aarush->add_card(Card(TEN, DIAMONDS));
+  aarush->add_card(Card(QUEEN, DIAMONDS)); 
+  aarush->add_card(Card(KING, DIAMONDS));
+  aarush->add_card(Card(ACE, DIAMONDS));
+
+  aarush->add_and_discard(Card(NINE, DIAMONDS) ); 
+
+  Card card_led = aarush->lead_card(DIAMONDS);
+
+  Card card_placed(JACK, HEARTS);
+  ASSERT_EQUAL(card_led, card_placed); 
+
+  delete aarush;
+}
+TEST(test_add_and_discard4) {
+  Player * aarush = Player_factory("Aarush", "Simple");
+  aarush->add_card(Card(JACK, CLUBS));
+  aarush->add_card(Card(TEN, DIAMONDS));
+  aarush->add_card(Card(QUEEN, DIAMONDS)); 
+  aarush->add_card(Card(KING, DIAMONDS));
+  aarush->add_card(Card(ACE, DIAMONDS));
+
+  aarush->add_and_discard(Card(NINE, DIAMONDS) ); 
+
+  Card card_led = aarush->lead_card(DIAMONDS);
+
+  Card card_placed(ACE, DIAMONDS);
+  ASSERT_EQUAL(card_led, card_placed); 
+
+  delete aarush;
+}
+TEST(test_add_and_discard5) {
+  Player * aarush = Player_factory("Aarush", "Simple");
+  aarush->add_card(Card(JACK, SPADES));
+  aarush->add_card(Card(JACK, SPADES));
+  aarush->add_card(Card(TEN, SPADES)); 
+  aarush->add_card(Card(NINE, HEARTS));
+  aarush->add_card(Card(NINE, DIAMONDS));
+
+  aarush->add_and_discard(Card(NINE, SPADES) ); 
+
+  Card card_led = aarush->lead_card(SPADES);
+
+  Card card_placed(NINE, DIAMONDS);
+  ASSERT_EQUAL(card_led, card_placed); 
+
+  delete aarush;
+}
+TEST(test_add_and_discard6) {
+  Player * aarush = Player_factory("Aarush", "Simple");
+  aarush->add_card(Card(JACK, SPADES));
+  aarush->add_card(Card(JACK, SPADES));
+  aarush->add_card(Card(TEN, CLUBS)); 
+  aarush->add_card(Card(NINE, HEARTS));
+  aarush->add_card(Card(NINE, SPADES));
+
+  aarush->add_and_discard(Card(ACE, CLUBS) ); 
+
+  Card card_led = aarush->lead_card(CLUBS);
+
+  Card card_placed(NINE, HEARTS);
+  ASSERT_EQUAL(card_led, card_placed); 
+
+  delete aarush;
+}
+TEST(test_add_and_discard7) {
+  Player * aarush = Player_factory("Aarush", "Simple");
+  aarush->add_card(Card(JACK, SPADES));
+  aarush->add_card(Card(JACK, HEARTS));
+  aarush->add_card(Card(TEN, CLUBS)); 
+  aarush->add_card(Card(NINE, HEARTS));
+  aarush->add_card(Card(NINE, SPADES));
+
+  aarush->add_and_discard(Card(TEN, DIAMONDS) ); 
+
+  Card card_led = aarush->lead_card(DIAMONDS);
+
+  Card card_placed(JACK, SPADES);
+  ASSERT_EQUAL(card_led, card_placed); 
+
+  delete aarush;
+}
 
 TEST_MAIN()
