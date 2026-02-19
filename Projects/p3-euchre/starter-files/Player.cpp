@@ -70,18 +70,21 @@ public:
             order_up_suit = Suit_next(upcard.get_suit());
             return true;
         }
+        
         int card_suit = Suit_next(upcard.get_suit());                
         int count1 = 0;
         for(int i = 0 ; i< 5; ++i){ //create a counter at 0 and then loop through all the cards
-                    if((cards[i].get_suit() == card_suit && cards[i].is_face_or_ace()) || cards[i].is_left_bower(static_cast<Suit>(card_suit))){// if the card is the upcard suit 
+                    if((cards[i].get_suit() == card_suit && cards[i].is_face_or_ace()) || 
+                    cards[i].is_left_bower(static_cast<Suit>(card_suit))
+                || cards[i].is_right_bower(static_cast<Suit>(card_suit))){// if the card is the upcard suit 
                         count1++;                        //and is a face or ace or left bower it adds to counter
                     }
                 }
-                if(count1 >= 2){ // if the suit had more than 2 
+                if(count1 >= 1){ // if the suit had more than 2 
                     order_up_suit = static_cast<Suit>(card_suit); // order the upcard and then return true
                     return true;
                 }
-                return false;
+            
         
      }
      return false;
@@ -157,26 +160,41 @@ public:
         //If a Simple Player can follow suit, they play the highest card that follows suit. Otherwise, they play the lowest card in their hand.
 
         // first case, is play a card if you have a card that follows the lead suit
+        bool lead_follow = false; 
+        int index = 0;
+
         for (int i = 0; i < next; i++) {
             // check if cards match the trump suit
-            if (cards.at(i).is_trump(trump)){
-
+            if (cards.at(i).get_suit(trump) == led_card.get_suit(trump)){
+                if (lead_follow == false) {
+                    lead_follow = true;
+                    index = i; 
+                } else {
+                    // if the found card is lower, then find the better index 
+                    if (Card_less(cards.at(index), cards.at(i), led_card, trump)) {
+                        index = i;
+                    }
+                }
             }
         }
-                // is next the amount of cards in the hand
+        // is next the amount of cards in the hand
         // second case, is if you dont have any trump cards or lead cards
-        int lowest = cards[0].get_rank();
-        int low = 0;
-        for(int j = 0; j < next; j++){
-         if(cards[j].get_rank() < lowest){
-            lowest = cards[j].get_rank();
-            low = j;
-         }
-            
+        if (!lead_follow){
+            index = 0;
+            for (int i = 1; i < next; i++){
+                // find lowest card
+                if (Card_less(cards.at(i), cards.at(index), trump)) {
+                        index = i;
+                }
+            }
         }
-        return cards[low];
-        // Mark you do this case!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ok chigga kys
-        return cards[0];
+
+        Card removed_card = cards[index];
+        // Remove the card from hand
+        cards[index] = cards[next - 1];
+        next--;
+
+        return removed_card;
     }
 };
 
