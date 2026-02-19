@@ -266,7 +266,7 @@ bool operator<(const Card &lhs, const Card &rhs){
 //EFFECTS Returns true if lhs is lower value than rhs or the same card as rhs.
 //  Does not consider trump.
 bool operator<=(const Card &lhs, const Card &rhs){
-  return (lhs < rhs) || (rhs.get_rank() == lhs.get_rank());
+  return (lhs < rhs) || (lhs == rhs);
 }
 
 //EFFECTS Returns true if lhs is higher value than rhs.

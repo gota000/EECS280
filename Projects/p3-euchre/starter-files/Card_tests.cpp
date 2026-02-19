@@ -31,15 +31,31 @@ TEST(card_suit_and_ranks) {
     Card a3(JACK, DIAMONDS);
     ASSERT_EQUAL(a3.get_suit(HEARTS), HEARTS);
 
+    // all four left bower 
+    Card a4(JACK, SPADES);
+    ASSERT_EQUAL(a4.get_suit(CLUBS), CLUBS);  
+    Card a5(JACK, CLUBS);
+    ASSERT_EQUAL(a5.get_suit(SPADES), SPADES);  
+    Card a6(JACK, HEARTS);
+    ASSERT_EQUAL(a6.get_suit(DIAMONDS), DIAMONDS); 
 
-
-
+    // Non Jack
+    Card a7(ACE, HEARTS);
+    ASSERT_EQUAL(a7.get_suit(CLUBS), HEARTS);
+    ASSERT_EQUAL(a7.get_suit(HEARTS), HEARTS);
 }
 TEST(face_card){
     Card j (JACK, DIAMONDS);
     ASSERT_TRUE(j.is_face_or_ace());
     Card A (ACE, DIAMONDS);
     ASSERT_TRUE(A.is_face_or_ace());
+
+    Card B (QUEEN, HEARTS);
+    ASSERT_TRUE(B.is_face_or_ace());
+    Card C (KING, SPADES);
+    ASSERT_TRUE(C.is_face_or_ace());
+    Card D (TWO, HEARTS);
+    ASSERT_FALSE(D.is_face_or_ace());
 }
 TEST(right_left_trump){
     Card C(JACK, CLUBS);
@@ -81,6 +97,21 @@ TEST(card_less){
     ASSERT_TRUE(Card_less(B, E , D , CLUBS));
     ASSERT_FALSE(Card_less(C, C , D , CLUBS));
 
+    Card F(JACK, CLUBS);  
+    Card G(JACK, SPADES);   
+    Card H(ACE, CLUBS);
+
+    ASSERT_FALSE(Card_less(F, G, CLUBS));  
+    ASSERT_FALSE(Card_less(F, H, CLUBS));  
+    ASSERT_TRUE(Card_less(G, F, CLUBS)); 
+    ASSERT_FALSE(Card_less(G, H, CLUBS));           
+
+    Card I(SIX, HEARTS);      
+    Card J(TWO, HEARTS);
+    Card K(ACE, DIAMONDS);
+
+    ASSERT_FALSE(Card_less(J, K, I, CLUBS));  
+    ASSERT_TRUE(Card_less(K, J, I, CLUBS));  
 }
 
 TEST(comparisons){
@@ -90,16 +121,24 @@ TEST(comparisons){
     Card D(JACK, CLUBS);
 
     ASSERT_TRUE(B < A);
-    ASSERT_TRUE(B <= C);
+    ASSERT_FALSE(B <= C);
     ASSERT_FALSE(B == C);
 
     ASSERT_TRUE(D == C);
 
     ASSERT_TRUE(A > B);
-    ASSERT_TRUE(B >= C);
+    ASSERT_TRUE(B >= C); 
     ASSERT_TRUE(B != A);
 
     ASSERT_TRUE(C < B);
+
+    Card E(JACK, SPADES);
+    Card F(JACK, HEARTS);
+    ASSERT_TRUE(E < F);
+    ASSERT_TRUE(F < C);
+    ASSERT_FALSE(F < E);
+    ASSERT_TRUE(E <= E);
+    ASSERT_TRUE(E >= E);
 }
 
 

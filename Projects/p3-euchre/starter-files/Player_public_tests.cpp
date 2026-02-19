@@ -16,29 +16,29 @@ using namespace std;
 // THESE TEST CASES WILL ONLY TELL YOU IF YOUR CODE COMPILES.
 // YOU NEED TO WRITE YOUR OWN COMPREHENSIVE TEST CASES IN Player_tests.cpp
 
-// TEST(test_player_insertion) {
-//   // Create a Human player
-//   Player * human = Player_factory("NotRobot", "Human");
+TEST(test_player_insertion) {
+  // Create a Human player
+  Player * human = Player_factory("NotRobot", "Human");
 
-//   // Print the player using the stream insertion operator
-//   ostringstream oss1;
-//   oss1 << * human;
+  // Print the player using the stream insertion operator
+  ostringstream oss1; 
+  oss1 << * human;
 
-//   // Verify that the output is the player's name
-//   ASSERT_EQUAL(oss1.str(), "NotRobot");
+  // Verify that the output is the player's name
+  ASSERT_EQUAL(oss1.str(), "NotRobot");
 
-//   // Create a Simple player
-//   Player * alice = Player_factory("Alice", "Simple");
+  // Create a Simple player
+  Player * alice = Player_factory("Alice", "Simple");
 
-//   // Print the player using the stream insertion operator
-//   ostringstream oss2;
-//   oss2 << *alice;
-//   ASSERT_EQUAL(oss2.str(), "Alice");
+  // Print the player using the stream insertion operator
+  ostringstream oss2;
+  oss2 << *alice;
+  ASSERT_EQUAL(oss2.str(), "Alice");
 
-//   // Clean up players that were created using Player_factory()
-//   delete human;
-//   delete alice;add_and_discard
-// }
+  // Clean up players that were created using Player_factory()
+  delete human;
+  delete alice;
+}
 
 TEST(test_player_get_name) {
   // Create a player and verify that get_name() returns the player's name
@@ -97,25 +97,25 @@ TEST(test_simple_player_lead_card) {
   delete bob;
 }
 
-// TEST(test_simple_player_play_card) { 
-//   // Bob's hand 
-//   Player * bob = Player_factory("Bob", "Simple");
-//   bob->add_card(Card(NINE, SPADES));
-//   bob->add_card(Card(TEN, SPADES));
-//   bob->add_card(Card(QUEEN, SPADES));
-//   bob->add_card(Card(KING, SPADES));
-//   bob->add_card(Card(ACE, SPADES));
+TEST(test_simple_player_play_card) { 
+  // Bob's hand 
+  Player * bob = Player_factory("Bob", "Simple");
+  bob->add_card(Card(NINE, SPADES));
+  bob->add_card(Card(TEN, SPADES));
+  bob->add_card(Card(QUEEN, SPADES));
+  bob->add_card(Card(KING, SPADES));
+  bob->add_card(Card(ACE, SPADES));
 
-//   // Bob plays a card
-//   Card nine_diamonds(NINE, DIAMONDS);
-//   Card card_played = bob->play_card(
-//     nine_diamonds,  // Nine of Diamonds is led
-//     HEARTS    // Trump suit
-//   ); 
+  // Bob plays a card
+  Card nine_diamonds(NINE, DIAMONDS);
+  Card card_played = bob->play_card(
+    nine_diamonds,  // Nine of Diamonds is led
+    HEARTS    // Trump suit
+  ); 
 
-//   // Verify the card Bob played
-//   ASSERT_EQUAL(card_played, Card(NINE, SPADES));
-//   delete bob;
-// }
+  // Verify the card Bob played
+  ASSERT_EQUAL(card_played, Card(NINE, SPADES));
+  delete bob;
+}
 
 TEST_MAIN()

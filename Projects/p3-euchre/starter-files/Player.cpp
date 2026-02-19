@@ -2,6 +2,7 @@
 #include <cmath>
 #include <iostream>
 #include <array>
+#include <system_error>
 #include "Player.hpp"
 #include "Card.hpp"
 
@@ -16,7 +17,8 @@ So, whatever you're seeing in the hpp file is just the base class.
  You'll need to create two classes One for Human and Other for simple, and derive the stuff from the Base class.*/
 
 std::ostream & operator<<(std::ostream &os, const Player &p) {
-  assert(false);
+  os << p.get_name(); 
+  return os;
 }
 
 class SimplePlayer : public Player{
@@ -152,8 +154,7 @@ public:
     }
     Card play_card(const Card &led_card, Suit trump) override{
         //When playing a card, Simple Players use a simple strategy that considers only the suit that was led. A more complex strategy would also consider the cards on the table.
-//If a Simple Player can follow suit, they play the highest card that follows suit. Otherwise, they play the lowest card in their hand.
-
+        //If a Simple Player can follow suit, they play the highest card that follows suit. Otherwise, they play the lowest card in their hand.
 
         // first case, is play a card if you have a card that follows the lead suit
         for (int i = 0; i < next; i++) {
@@ -179,6 +180,78 @@ public:
     }
 };
 
+class HumanPlayer : public Player{
+private:
+    string player_name = "";
+    array<Card, 6> cards;
+    int next;
+
+public:
+    HumanPlayer(const std::string &name) : player_name(name){
+        next = 0;
+    }
+        
+    const std::string & get_name() const override{
+        return player_name; 
+    }
+    void add_card(const Card &c) override{
+        if(next < MAX_HAND_SIZE){
+            cards[next] = c;
+            next++;
+        }
+    }
+
+    void print_hand() const {
+  for (size_t i=0; i < cards.size(); ++i)
+    cout << "Human player " << get_name() << "'s hand: "
+         << "[" << i << "] " << cards[i] << "\n";
+}
+
+
+    bool make_trump(const Card &upcard, bool is_dealer, int round, Suit &order_up_suit) const override{
+        print_hand();
+        cout << "Human player " << get_name() << ", please enter a suit, or \"pass\":\n";
+        string decision;
+        cin >> decision;
+
+        if (decision != "pass") {
+        order_up_suit = string_to_suit(decision);
+        return true;
+        }
+        else {
+        return false;
+        }
+
+        return false;
+
+    }
+    void add_and_discard(const Card &upcard) override{
+        print_hand();
+    cout << "Discard upcard: [-1]\n";
+    cout << "Human player " << get_name() << ", please select a card to discard:\n";
+    int decisions;
+    cin >> decisions;
+    if(decisions != 1){
+        cards[decisions] = upcard;
+    }
+    }
+
+    Card lead_card(Suit trump) override{
+    print_hand();
+    cout << "Human player " << get_name() << ", please select a card:\n";
+    int decisions;
+    cin >> decisions;
+    return cards[decisions];
+    }
+
+    Card play_card(const Card &led_card, Suit trump) override{
+    print_hand();
+    cout << "Human player " << get_name() << ", please select a card:\n";
+    int decisions;
+    cin >> decisions;
+    return cards[decisions];
+    }
+};
 
 Player * Player_factory(const std::string &name, const std::string &strategy) {
     // We need to check the value of strategy and return 
@@ -187,6 +260,8 @@ Player * Player_factory(const std::string &name, const std::string &strategy) {
         // The "new" keyword dynamically allocates an object.
         
         return new SimplePlayer(name);
+    } else if (strategy == "Human"){
+        return new HumanPlayer(name);
     }
     // Repeat for each other type of Player
     // Invalid strategy if we get here
