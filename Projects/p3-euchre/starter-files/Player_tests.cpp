@@ -384,6 +384,21 @@ TEST(test_play_card4) {
   ASSERT_EQUAL(card_played, Card(TEN, SPADES));
   delete Franny;
 }
+// TEST(test_play_card5) { 
+  
+//   Player * Franny = Player_factory("Franny", "Simple");
+//   Franny->add_card(Card(NINE, DIAMONDS));
+//   Franny->add_card(Card(TEN, DIAMONDS));
+//   Franny->add_card(Card(QUEEN, HEARTS));
+//   Franny->add_card(Card(JACK, HEARTS));
+//   Franny->add_card(Card(JACK, HEARTS));
+//   Card kc(KING, CLUBS);
+//   Card card_played = Franny->play_card(kc, HEARTS  ); 
+
+//   // Verify the card Bob played
+//   ASSERT_EQUAL(card_played, Card(TEN, SPADES));
+//   delete Franny;
+// }
 // Add more tests here
 TEST(test_add_and_discard) {
   Player * aarush = Player_factory("Aarush", "Simple");
