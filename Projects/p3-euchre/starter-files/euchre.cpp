@@ -9,22 +9,23 @@ using namespace std;
 
 class Game {
  public:
-  Game(istream& fin, string& shuffles, int points, string& p1, string& p1t,
-       string& p2, string& p2t, string& p3, string& p3t, string& p4,
-       string& p4t)
-      : input(fin), points_win(points), suffle_toggle(shuffles) {
-    players.push_back(Player_factory(p1, p1t));
-    players.push_back(Player_factory(p2, p2t));
-    players.push_back(Player_factory(p3, p3t));
-    players.push_back(Player_factory(p4, p4t));
+  Game(istream& fin, string& shuffles, int points,
+       vector<pair<string, string>>& player_data)
+      : pack(fin), points_win(points), suffle_toggle(shuffles) {
+    for (pair<string, string> data : player_data) {
+      players.push_back(Player_factory(data.first, data.second));
+    }
   }
   void play() {
     while (team_1_points < points_win && team_2_points < points_win) {
       // shuffle at the start
+
       if (suffle_toggle == "shuffle") {
         shuffle();
+      } else {
+        pack.reset();
       }
-      
+
       // reset things
       t1_roundwon = 0;
       t2_roundwon = 0;
@@ -41,12 +42,13 @@ class Game {
       cout << upcard << " turned up" << endl;
       cycle_make_trump();
 
-      int leader = eldest_hand;
       for (int trick = 0; trick < 5; ++trick) {
         current_led = lead_card(*players[eldest_hand]);
-        leader = play_hand_cycle(eldest_hand);
+        eldest_hand = play_hand_cycle(eldest_hand);
       }
-
+      march_euchered(t1_maketrump, t2_maketrump, t1_roundwon, t2_roundwon);
+      t1_roundwon = 0;
+      t2_roundwon = 0;
       dealer_index = (1 + dealer_index) % 4;
       hand++;
     }
@@ -57,7 +59,7 @@ class Game {
  private:
   std::vector<Player*> players;
   Pack pack;
-  int points_win = 0;
+  int points_win;
   int team_1_points = 0;
   bool t1_maketrump = false;
   int t1_roundwon = 0;
@@ -75,39 +77,27 @@ class Game {
 
   string suffle_toggle;
 
-  istream& input;
-
   void shuffle() { pack.shuffle(); }
   /*Each player receives five cards, dealt in alternating batches of 3 and 2.
   That is, deal 3-2-3-2 cards then 2-3-2-3 cards, for a total of 5 cards each.
   The player to the left of the dealer receives the first batch, and dealing
   continues to the left until 8 batches have been dealt.
 */
+  // need to account for dealer
+  void deal_round(int& deal_first, int start_count) {
+    for (int i = 0; i < 4; ++i) {
+      int num_cards = (i % 2 == 0) ? start_count : (5 - start_count);
+      for (int j = 0; j < num_cards; ++j) {
+        players.at(deal_first)->add_card(pack.deal_one());
+      }
+      deal_first = (1 + deal_first) % 4;
+    }
+  }
+
   void deal(int dealer_index) {
     int deal_first = (1 + dealer_index) % 4;
-    // need to account for dealer
-    for (int i = 0; i < 4; ++i) {
-      if ((i + 1) % 2 != 0) {
-        players.at(deal_first)->add_card(pack.deal_one());
-        players.at(deal_first)->add_card(pack.deal_one());
-        players.at(deal_first)->add_card(pack.deal_one());
-      } else {
-        players.at(deal_first)->add_card(pack.deal_one());
-        players.at(deal_first)->add_card(pack.deal_one());
-      }
-      deal_first = (1 + deal_first) % 4;
-    }
-    for (int i = 0; i < 4; ++i) {
-      if (i % 2 != 0) {
-        players.at(deal_first)->add_card(pack.deal_one());
-        players.at(deal_first)->add_card(pack.deal_one());
-        players.at(deal_first)->add_card(pack.deal_one());
-      } else {
-        players.at(deal_first)->add_card(pack.deal_one());
-        players.at(deal_first)->add_card(pack.deal_one());
-      }
-      deal_first = (1 + deal_first) % 4;
-    }
+    deal_round(deal_first, 3);
+    deal_round(deal_first, 2);
   }
 
   void cycle_make_trump() {  // cycle of determining who makes the trump
@@ -126,11 +116,13 @@ class Game {
         }
         cout << players[person]->get_name() << " orders up " << order_up_suit
              << endl;
-        cout << endl;
+        if (round == 2) {
+          cout << endl;
+        }
       }
       person = (1 + person) % 4;
       counter++;
-      if (counter == 4) {
+      if (counter == 4 && !A) {
         round = 2;
       }
     }
@@ -176,11 +168,10 @@ class Game {
         A = false;
       }
     }
-
-    cout << players[who_won(played, player_index)]->get_name()
-         << " takes the trick" << endl;
+    int B = who_won(played, player_index);
+    cout << players[B]->get_name() << " takes the trick" << endl;
     cout << endl;
-    return who_won(played, player_index);
+    return B;
   }
   int who_won(vector<Card> played, vector<int> index) {
     Card win = played[0];
@@ -206,14 +197,58 @@ class Game {
   Card play_hand(Player& player) {
     return player.play_card(current_led, trump_suit);
   }
+  void march_euchered(bool t1trump, bool t2trump, int t1roundwon,
+                      int t2roundwon) {
+    bool euchered = false;
+    bool march = false;
+    if (t1trump && (t1roundwon == 3 || t1roundwon == 4)) {
+      team_1_points++;
+    } else if (t2trump && (t2roundwon == 3 || t2roundwon == 4)) {
+      team_2_points++;
+    }
+
+    if (t1trump && t1roundwon == 5) {
+      team_1_points = team_1_points + 2;
+      march = true;
+    }
+    if (t2trump && t2roundwon == 5) {
+      team_2_points = team_2_points + 2;
+      march = true;
+    }
+    if (!t1trump && (t1roundwon == 3 || t1roundwon == 4 || t1roundwon == 5)) {
+      team_1_points = team_1_points + 2;
+      euchered = true;
+    }
+    if (!t2trump && (t2roundwon == 3 || t2roundwon == 4 || t2roundwon == 5)) {
+      team_2_points = team_2_points + 2;
+      euchered = true;
+    }
+    if (t1roundwon > t2roundwon) {
+      cout << players[0]->get_name() << " and " << players[2]->get_name()
+           << " win the hand" << endl;
+    } else {
+      cout << players[1]->get_name() << " and " << players[3]->get_name()
+           << " win the hand" << endl;
+    }
+    if (euchered) {
+      cout << "euchred!" << endl;
+    } else if (march) {
+      cout << "march!" << endl;
+    }
+    cout << players[0]->get_name() << " and " << players[2]->get_name()
+         << " have " << team_1_points << " points" << endl;
+    cout << players[1]->get_name() << " and " << players[3]->get_name()
+         << " have " << team_2_points << " points" << endl;
+    cout << endl;
+  }
 
   void winner() {
     if (team_1_points >= points_win) {
       cout << players.at(0)->get_name() << " and " << players.at(2)->get_name()
-           << " win! " << endl;
+           << " win!" << endl;
     } else {
       cout << players.at(1)->get_name() << " and " << players.at(3)->get_name()
-           << " win! " << endl;
+           << " win!" << endl;
     }
   }
 
@@ -259,136 +294,14 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
+  for (int i = 0; i < argc; i++) {
+    cout << argv[i] << " ";
+  }
+  cout << endl;
+
   //   // Read command line args and check for errors
-  Game game(fin, shuffle, points, p1, p1t, p2, p2t, p3, p3t, p4, p4t);
+  vector<pair<string, string>> player_data = {
+      {p1, p1t}, {p2, p2t}, {p3, p3t}, {p4, p4t}};
+  Game game(fin, shuffle, points, player_data);
   game.play();
 }
-
-/*
-#include <iostream>
-#include <string>
-#include <vector>
-#include <fstream>
-#include <string>
-
-#include "Pokemon.hpp"
-#include "Trainer.hpp"
-
-using namespace std;
-
-class League {
-private:
-  // TODO: Add member variables here
-  vector<Trainer*> gym_leaders;
-  vector<Trainer*> defeated;
-
-
-public:
-
-  // TODO: Add constructor here to initialize members
-  League(istream &gym_in) {
-    int num_gym_leaders;
-    gym_in >> num_gym_leaders;
-    string ignore;
-    gym_in >> ignore; // read in the word "leaders"
-    for(int i = 0; i < num_gym_leaders; ++i) {
-    gym_leaders.push_back(Trainer_factory(gym_in));
-    }
-  }
-
-  // TODO: Add member functions here
-  int battle_gym_leader(Trainer *current_gym_leader, Trainer *player) {
-    int num_wins = 0;
-    for(int i = 0; i < 5; ++i) {
-      Pokemon enemy = current_gym_leader->choose_pokemon();
-      cout << *current_gym_leader << " chooses " << enemy << endl;
-      Pokemon p = player->choose_pokemon(enemy.get_type());
-      cout << *player << " chooses " << p << endl;
-      if (Pokemon_battle(p, enemy)) {
-        cout << p << " defeats " << enemy << endl << endl;
-        ++num_wins;
-      }
-      else {
-        cout << enemy << " defeats " << p << endl << endl;
-      }
-    }
-    return num_wins;
-  }
-
-  void battle(Trainer *player) {
-    for(int i = 0; i < gym_leaders.size(); ++i) {
-
-      player->reset();
-      Trainer *current_gym_leader = gym_leaders[i];
-
-      cout << "-----" << *player << " vs. " << *current_gym_leader << "-----" <<
-endl;
-
-      int num_wins = battle_gym_leader(current_gym_leader,player);
-
-      cout << "Result: " << *player << "=" << num_wins << ", "
-         << *current_gym_leader << "=" << 5 - num_wins << endl;
-
-      if (num_wins >= 3) {
-        defeated.push_back(current_gym_leader);
-      }
-
-      if (num_wins == 0 || num_wins == 5) {
-        cout << "It's a clean sweep!" << endl;
-      }
-
-      cout << endl;
-    }
-    print_results(player);
-  }
-
-void print_results(Trainer *player) {
-    cout << *player << " won " << defeated.size() << " matches by defeating:" <<
-endl; for(int i = 0; i < defeated.size(); ++i) { cout << *defeated[i] << endl;
-    }
-  }
-
-
-  ~League() {
-    // TODO: put code here to clean up by deleting all Trainer objects
-    for(size_t i = 0; i < gym_leaders.size(); ++i) {
-      delete gym_leaders[i];
-    }
-
-  }
-
-};
-
-int main(int argc, char *argv[]) {
-
-  // TODO: Add code to read command line args and open file streams here
-  if (argc != 3) {
-    cout << "Usage: battle.exe PLAYER_FILE GYM_LEADERS_FILE" << endl;
-    return 1;
-  }
-
-  string player_in_name = argv[1];
-  string gym_leaders_in_name = argv[2];
-
-  ifstream player_in(player_in_name);
-  if ( !player_in.is_open() ) {
-    cout << "Unable to open " << player_in_name << endl;
-    return 1;
-  }
-  ifstream gym_in(gym_leaders_in_name);
-  if ( !gym_in.is_open() ) {
-    cout << "Unable to open " << gym_leaders_in_name << endl;
-    return 1;
-  }
-
-  League newLeague(gym_in);
-
-  gym_in.close();
-
-  Trainer *player = Trainer_factory(player_in);
-
-  newLeague.battle(player);
-
-  delete player;
-}
-*/

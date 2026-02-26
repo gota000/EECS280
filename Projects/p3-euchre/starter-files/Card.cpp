@@ -224,9 +224,11 @@ bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump){
   }
 
   // Neither is a trump, then use led
-  if (a.get_suit() == led_card.get_suit(trump) && b.get_suit() != led_card.get_suit(trump)){
+  if (a.get_suit() == led_card.get_suit(trump) &&
+   b.get_suit() != led_card.get_suit(trump)){
     return false;
-  } else if (b.get_suit() == led_card.get_suit(trump) && a.get_suit() != led_card.get_suit(trump)) {
+  } else if (b.get_suit() == led_card.get_suit(trump) &&
+   a.get_suit() != led_card.get_suit(trump)) {
     return true;
   }
 

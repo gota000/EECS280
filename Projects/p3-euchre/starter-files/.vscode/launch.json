@@ -9,7 +9,7 @@
         "type": "cppdbg",
         "request": "launch",
         "program": "${workspaceFolder}/euchre.exe",
-        "args": ["pack.in", "noshuffle" ,"1" ,"Adi" ,"Simple" ,"Barbara" ,"Simple" ,"Chi-Chih" ,"Simple" ,"Dabbala" ,"Simple" ,">" ,"euchre_test00.out"],
+        "args": ["pack.in", "noshuffle" ,"3" ,"Ivan" ,"Human" ,"Judea" ,"Human" ,"Kunle" ,"Human" ,"Liskov" ,"Human" ,">" ,"euchre_test50.out"],
         "stopAtEntry": false,
         "cwd": "${fileDirname}",
         "environment": [],
