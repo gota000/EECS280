@@ -140,7 +140,8 @@ class List {
   ~List() { clear(); }
 
   // Copy Costructor
-  List(const List& other) : first(nullptr), last(nullptr), list_size(0) { copy_all(other); }
+  List(const List& other) : first(nullptr),
+   last(nullptr), list_size(0) { copy_all(other); }
 
   // Overloading Assignment OPerator
   List<T>& operator=(const List<T>& other) {
